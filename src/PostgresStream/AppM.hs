@@ -28,7 +28,7 @@ type AppM = ReaderT AppCtx Handler
 data AppCtx = AppCtx
   { config :: Config,
     getLogger :: LoggerSet,
-    getPool :: Pool,
+    getPool :: PGPool,
     getTime :: IO UTCTime
   }
 

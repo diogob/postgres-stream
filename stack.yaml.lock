@@ -25,6 +25,13 @@ packages:
       sha256: 42c3843e920955b647a25a125c090efa72e024d1ef73d8e3ccf5710dc9217940
   original:
     hackage: streamly-0.8.0@sha256:9784c80ee1ada51477520cabc4e92a0c76a6bb265f968a188f2fce818e7398e0,19654
+- completed:
+    hackage: resource-pool-fork-avanov-0.2.4.0@sha256:b2b8c0c2b75308f78fda23b1dc6fbbaf343b3ef7b41cb3a98a3cd65ca67215ca,1445
+    pantry-tree:
+      size: 396
+      sha256: 9f9dc36944974dd1d1d46de363755ef31afaf11de2ec86b8595c60f9ba62fa8e
+  original:
+    hackage: resource-pool-fork-avanov-0.2.4.0@sha256:b2b8c0c2b75308f78fda23b1dc6fbbaf343b3ef7b41cb3a98a3cd65ca67215ca,1445
 snapshots:
 - completed:
     size: 590102
