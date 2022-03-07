@@ -51,6 +51,7 @@ library
     , either
     , auto-update
     , streamly
+    , streamly-bytestring
     , time
     , monad-time
     , fast-logger

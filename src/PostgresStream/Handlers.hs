@@ -12,15 +12,17 @@ import qualified PostgresStream.Database as DB
 import PostgresStream.Domain
 import PostgresStream.Prelude
 import Servant
+import qualified Streamly.Internal.Data.Array.Stream.Fold.Foreign as Stramly
+import qualified Streamly.Prelude as Streamly
 import System.Log.FastLogger (pushLogStrLn, toLogStr)
 
-file :: Text -> AppM File
+file :: Text -> AppM (Streamly.SerialT IO ByteString)
 file id = do
   pool <- asks getPool
   fileOrError <- DB.file pool id
   case fileOrError of
-    Right file -> pure $ File $ toSL file
+    Right file -> pure $ Streamly.fromPure file
     Left e -> err e
   where
-    err :: ApiError -> AppM File
+    err :: ApiError -> AppM (Streamly.SerialT IO ByteString)
     err (Error msg) = throwError $ err503 {errBody = toSL msg}
