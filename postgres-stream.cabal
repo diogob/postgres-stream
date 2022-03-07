@@ -1,0 +1,97 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           postgres-stream
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/postgres-stream#readme>
+homepage:       https://github.com/githubuser/postgres-stream#readme
+bug-reports:    https://github.com/githubuser/postgres-stream/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2022 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/postgres-stream
+
+library
+  exposed-modules:
+      PostgresStream
+      PostgresStream.Api
+      PostgresStream.AppM
+      PostgresStream.Database
+      PostgresStream.Domain
+      PostgresStream.Handlers
+      PostgresStream.Prelude
+  other-modules:
+      Paths_postgres_stream
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , servant-server
+    , servant-streamly
+    , wai
+    , warp
+    , protolude
+    , hasql
+    , hasql-pool
+    , postgresql-libpq
+    , postgresql-binary
+    , vector
+    , either
+    , auto-update
+    , streamly
+    , time
+    , monad-time
+    , fast-logger
+
+  default-language: Haskell2010
+  default-extensions: OverloadedStrings, NoImplicitPrelude
+
+executable postgres-stream
+  main-is: Main.hs
+  other-modules:
+      Paths_postgres_stream
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base
+    , postgres-stream
+    , servant-server
+    , warp
+    , protolude
+    , envparse
+  default-language: Haskell2010
+  default-extensions: OverloadedStrings, NoImplicitPrelude
+
+test-suite postgres-stream-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_postgres_stream
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base
+    , hspec
+    , hspec-wai
+    , hspec-wai-json
+    , postgres-stream
+    , servant-server
+    , wai
+    , warp
+  default-language: Haskell2010
+  default-extensions: OverloadedStrings
