@@ -15,7 +15,6 @@ module PostgresStream.Api
 where
 
 import PostgresStream.AppM
-import PostgresStream.Database (Pool)
 import PostgresStream.Domain
 import PostgresStream.Handlers
 import PostgresStream.Prelude

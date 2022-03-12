@@ -1,8 +1,6 @@
 module PostgresStream
   ( module Exports,
-    Pool,
     acquire,
-    release,
     mkLogger,
     mkGetTime,
     AppCtx (..),

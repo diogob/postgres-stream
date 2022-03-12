@@ -44,8 +44,6 @@ library
     , warp
     , protolude
     , resource-pool-fork-avanov
-    , hasql
-    , hasql-pool
     , postgresql-libpq
     , postgresql-binary
     , vector
@@ -56,6 +54,7 @@ library
     , time
     , monad-time
     , fast-logger
+    , transformers
 
   default-language: Haskell2010
   default-extensions: OverloadedStrings, NoImplicitPrelude
@@ -95,5 +94,7 @@ test-suite postgres-stream-test
     , servant-server
     , wai
     , warp
+    , protolude
+
   default-language: Haskell2010
   default-extensions: OverloadedStrings

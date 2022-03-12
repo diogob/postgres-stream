@@ -3,13 +3,12 @@ module PostgresStream.Database
     acquire,
     PGPool,
     -- re-exports
-    Pool,
-    UsageError,
-    release,
     LocalTime,
   )
 where
 
+import Control.Monad (guard)
+import Control.Monad.Trans.Maybe (MaybeT (..), runMaybeT)
 import qualified Data.Aeson as JSON
 import Data.Either.Combinators (mapBoth, mapLeft)
 import Data.Functor.Contravariant ((>$<))
@@ -17,11 +16,6 @@ import qualified Data.Pool as ResourcePool
 import Data.Time
 import Data.Vector
 import qualified Database.PostgreSQL.LibPQ as PG
-import qualified Hasql.Decoders as HD
-import qualified Hasql.Encoders as HE
-import Hasql.Pool (Pool, UsageError, release, use)
-import Hasql.Session (Session, statement)
-import Hasql.Statement (Statement (..))
 import PostgreSQL.Binary.Data (LocalTime)
 import PostgresStream.Domain
 import PostgresStream.Prelude
@@ -49,9 +43,9 @@ file :: MonadIO m => PGPool -> Text -> m (Either ApiError ByteString)
 file pool id = liftIO $ ResourcePool.withResource pool selectVersion
   where
     selectVersion con = do
-      maybeResult <- PG.exec con sql
-      case maybeResult of
-        Nothing -> pure $ Left $ Error "Some error executing SQL"
-        Just r -> do
-          maybeToRight (Error "Some error fetching SQL") <$> PG.getvalue r 0 0
-    sql = "SELECT version()"
+      version <- runMaybeT $ selectOne con "SELECT version()"
+      pure $ maybeToRight (Error "Error executing SQL") version
+
+    selectOne con sql = do
+      maybeResult <- MaybeT $ PG.exec con sql
+      MaybeT $ PG.getvalue maybeResult 0 0
