@@ -19,10 +19,8 @@ import PostgresStream.Domain
 import PostgresStream.Handlers
 import PostgresStream.Prelude
 import Servant
-import Servant.Streamly
-import qualified Streamly.Prelude as Streamly
 
-type API = "file" :> Capture "id" Text :> StreamGet NoFraming OctetStream (Streamly.SerialT IO ByteString)
+type API = "file" :> Capture "id" Text :> StreamGet NoFraming OctetStream (SourceIO ByteString)
 
 api :: Proxy API
 api = Proxy
