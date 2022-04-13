@@ -32,10 +32,20 @@ packages:
       sha256: 9f9dc36944974dd1d1d46de363755ef31afaf11de2ec86b8595c60f9ba62fa8e
   original:
     hackage: resource-pool-fork-avanov-0.2.4.0@sha256:b2b8c0c2b75308f78fda23b1dc6fbbaf343b3ef7b41cb3a98a3cd65ca67215ca,1445
+- completed:
+    name: protolude
+    version: 0.3.1
+    git: https://github.com/protolude/protolude.git
+    pantry-tree:
+      size: 3146
+      sha256: 685ed0191298da9540e772ffa746eb078d4f4a77ed8012a9933d3c79644b1054
+    commit: 3e249724fd0ead27370c8c297b1ecd38f92cbd5b
+  original:
+    git: https://github.com/protolude/protolude.git
+    commit: 3e249724fd0ead27370c8c297b1ecd38f92cbd5b
 snapshots:
 - completed:
-    size: 590102
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/27.yaml
-    sha256: 79a786674930a89301b0e908fad2822a48882f3d01486117693c377b8edffdbe
-  original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/27.yaml
+    size: 616897
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/0.yaml
+    sha256: bbf2be02f17940bac1f87cb462d4fb0c3355de6dcfc53d84f4f9ad3ee2164f65
+  original: lts-19.0
