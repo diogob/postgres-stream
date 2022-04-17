@@ -1,0 +1,8 @@
+cradle:
+  stack:
+    - path: "./test/"
+      component: "postgres-stream:test:postgres-stream-test"
+    - path: "./src"
+      component: "postgres-stream:lib"
+    - path: "./app"
+      component: "postgres-stream:exe:postgres-stream"
