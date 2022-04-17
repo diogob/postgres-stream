@@ -16,6 +16,7 @@ import qualified Data.Pool as ResourcePool
 import Data.Time
 import Data.Vector
 import qualified Database.PostgreSQL.LibPQ as PG
+import Foreign.C.Types (CUInt (..))
 import PostgreSQL.Binary.Data (LocalTime)
 import PostgresStream.Domain
 import PostgresStream.Prelude
@@ -43,9 +44,16 @@ file :: MonadIO m => PGPool -> Text -> m (Either ApiError ByteString)
 file pool id = liftIO $ ResourcePool.withResource pool selectVersion
   where
     selectVersion con = do
-      version <- runMaybeT $ selectOne con "SELECT version()"
-      pure $ maybeToRight (Error "Error executing SQL") version
+      file <- runMaybeT $ selectBytes con (toSL id)
+      pure $ maybeToRight (Error "Error executing SQL") file
 
-    selectOne con sql = do
-      maybeResult <- MaybeT $ PG.exec con sql
-      MaybeT $ PG.getvalue maybeResult 0 0
+    selectBytes con id = do
+      escapedId <- MaybeT $ PG.escapeStringConn con id
+      void $ MaybeT $ PG.exec con "BEGIN"
+      maybeResult <- MaybeT $ PG.exec con ("SELECT content FROM files WHERE name = '" <> escapedId <> "'")
+      oidBytes <- MaybeT $ PG.getvalue' maybeResult 0 0
+      oid <- MaybeT $ pure $ PG.Oid <$> readMaybe oidBytes
+      fd <- MaybeT $ PG.loOpen con oid ReadMode
+      contentBytes <- MaybeT $ PG.loRead con fd 1000000
+      void $ MaybeT $ PG.exec con "COMMIT"
+      pure contentBytes
