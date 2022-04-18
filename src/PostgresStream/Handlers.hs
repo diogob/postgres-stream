@@ -21,19 +21,19 @@ chunkSize = 1000
 file :: Text -> AppM (SourceIO ByteString)
 file id = do
   pool <- asks getPool
-  pure $ fromStepT $ loop pool 0
-  where
-    loop pool offset = Effect $ step pool offset <$> readChunk pool offset
-    step pool offset x
-      | BS.length x /= chunkSize = Stop
-      | otherwise = Yield x (loop pool (offset + chunkSize))
+  let loop offset = Effect $ step offset <$> readChunk offset
+      step offset x
+        | BS.length x == 0 = Stop
+        | otherwise = Yield x (loop (offset + chunkSize))
 
-    readChunk :: DB.PGPool -> Int -> IO ByteString
-    readChunk pool offset = do
-      fileOrError <- DB.file pool id chunkSize offset
-      case fileOrError of
-        Right file -> pure file
-        Left e -> throwIO e
+      readChunk :: Int -> IO ByteString
+      readChunk offset = do
+        fileOrError <- DB.file pool id chunkSize offset
+        case fileOrError of
+          Right file -> pure file
+          Left e -> throwIO e
+
+  pure $ fromStepT $ loop 0
 
 -- do
 -- -- fileOrError <- DB.file pool id
