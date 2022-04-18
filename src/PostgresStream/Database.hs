@@ -17,6 +17,7 @@ import Data.Time
 import Data.Vector
 import qualified Database.PostgreSQL.LibPQ as PG
 import Foreign.C.Types (CUInt (..))
+import GHC.IO.Device (SeekMode (..))
 import PostgreSQL.Binary.Data (LocalTime)
 import PostgresStream.Domain
 import PostgresStream.Prelude
@@ -40,8 +41,8 @@ acquire (size, timeout, connectionSettings) =
     stripes =
       1
 
-file :: MonadIO m => PGPool -> Text -> m (Either ApiError ByteString)
-file pool id = liftIO $ ResourcePool.withResource pool selectVersion
+file :: MonadIO m => PGPool -> Text -> Int -> Int -> m (Either ApiError ByteString)
+file pool id limit offset = liftIO $ ResourcePool.withResource pool selectVersion
   where
     selectVersion con = do
       file <- runMaybeT $ selectBytes con (toSL id)
@@ -54,6 +55,7 @@ file pool id = liftIO $ ResourcePool.withResource pool selectVersion
       oidBytes <- MaybeT $ PG.getvalue' maybeResult 0 0
       oid <- MaybeT $ pure $ PG.Oid <$> readMaybe oidBytes
       fd <- MaybeT $ PG.loOpen con oid ReadMode
-      contentBytes <- MaybeT $ PG.loRead con fd 1000000
+      MaybeT $ PG.loSeek con fd AbsoluteSeek offset
+      contentBytes <- MaybeT $ PG.loRead con fd limit
       void $ MaybeT $ PG.exec con "COMMIT"
       pure contentBytes
